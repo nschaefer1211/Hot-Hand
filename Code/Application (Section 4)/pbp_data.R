@@ -8,8 +8,6 @@ library(stringr)
 
 "%!in%" <- function(x, y) !("%in%"(x, y))
 
-df <- read.csv("data_fullseason.csv")
-
 Viewdata <- read.csv("data_fullseason.csv") %>%
   select(game_id, date, a1, a2, a3, a4, a5, h1, h2, h3, h4, h5, remaining_time, play_length, period,
          away_score, home_score, team, type, points, result, shot_distance, description) %>%

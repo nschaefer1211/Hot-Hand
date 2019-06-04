@@ -1,5 +1,9 @@
+library(dplyr)
+
 #Model 1
+setwd("C:/Users/nscha/OneDrive/Studium/Bachelorarbeit VWL/Hot-Hand/Data")
 load("pbpData.Rdata")
+df <- read.csv("data_fullseason.csv")
 data <- Viewdata
 teams <- unique(data$team)
 
@@ -108,27 +112,41 @@ for (j in 1:length(teams)) {
     shots_4mi = c(length(temp4$result)), FGM_4mi = c(length((temp4 %>% filter(result == "made"))$result)), dist_4mi = c(mean(temp4$shot_distance))
   )
   
-  table <- rbind(table, temp)
+  table <- rbind(temp, table)
 }
 
-table[1, "shots_3ma"] <- sum(table[-1, "shots_3ma"])
-table[1, "FGM_3ma"] <- sum(table[-1, "FGM_3ma"])
-table[1, "dist_3ma"] <- sum(table[-1, "dist_3ma"] * table[-1, "shots_3ma"])/table[1, "shots_3ma"]
+table[31, "shots_3ma"] <- sum(table[-31, "shots_3ma"])
+table[31, "FGM_3ma"] <- sum(table[-31, "FGM_3ma"])
+table[31, "dist_3ma"] <- sum(table[-31, "dist_3ma"] * table[-31, "shots_3ma"])/table[31, "shots_3ma"]
 
-table[1, "shots_3mi"] <- sum(table[-1, "shots_3mi"])
-table[1, "FGM_3mi"] <- sum(table[-1, "FGM_3mi"])
-table[1, "dist_3mi"] <- sum(table[-1, "dist_3mi"] * table[-1, "shots_3mi"])/table[1, "shots_3mi"]
+table[31, "shots_3mi"] <- sum(table[-31, "shots_3mi"])
+table[31, "FGM_3mi"] <- sum(table[-31, "FGM_3mi"])
+table[31, "dist_3mi"] <- sum(table[-31, "dist_3mi"] * table[-31, "shots_3mi"])/table[31, "shots_3mi"]
 
-table[1, "shots_4ma"] <- sum(table[-1, "shots_4ma"])
-table[1, "FGM_4ma"] <- sum(table[-1, "FGM_4ma"])
-table[1, "dist_4ma"] <- sum(table[-1, "dist_4ma"] * table[-1, "shots_4ma"])/table[1, "shots_4ma"]
+table[31, "shots_4ma"] <- sum(table[-31, "shots_4ma"])
+table[31, "FGM_4ma"] <- sum(table[-31, "FGM_4ma"])
+table[31, "dist_4ma"] <- sum(table[-31, "dist_4ma"] * table[-31, "shots_4ma"])/table[31, "shots_4ma"]
 
-table[1, "shots_4mi"] <- sum(table[-1, "shots_4mi"])
-table[1, "FGM_4mi"] <- sum(table[-1, "FGM_4mi"])
-table[1, "dist_4mi"] <- sum(table[-1, "dist_4mi"] * table[-1, "shots_4mi"])/table[1, "shots_4mi"]
+table[31, "shots_4mi"] <- sum(table[-31, "shots_4mi"])
+table[31, "FGM_4mi"] <- sum(table[-31, "FGM_4mi"])
+table[31, "dist_4mi"] <- sum(table[-31, "dist_4mi"] * table[-31, "shots_4mi"])/table[31, "shots_4mi"]
 
 table_final <- table %>%
   mutate(`FG%` = FGM/shots, `P(hit|3 makes)` = FGM_3ma/shots_3ma, `P(hit|3 misses)` = FGM_3mi/shots_3mi, `P(hit|4 makes)` = FGM_4ma/shots_4ma,
          `P(hit|4 misses)` = FGM_4mi/shots_4mi) %>%
-  select(Team, shots, `FG%`, shot_distance, shots_3ma, `P(hit|3 makes)`, dist_3ma, shots_3ma, `P(hit|3 misses)`, dist_3mi,
+  select(Team, shots, `FG%`, shot_distance, shots_3ma, `P(hit|3 makes)`, dist_3ma, shots_3mi, `P(hit|3 misses)`, dist_3mi,
          shots_4ma, `P(hit|4 makes)`, dist_4ma, shots_4mi, `P(hit|4 misses)`, dist_4mi)
+
+output <- table_final %>%
+  select(Team,`P(hit|4 misses)`, shots_4mi, `P(hit|3 misses)`, shots_3mi, `FG%`, shots, `P(hit|3 makes)`, shots_3ma, `P(hit|4 makes)`, shots_4ma) %>%
+  mutate(`GVT est. k = 3` = round(`P(hit|3 makes)`-`P(hit|3 misses)`, digits = 3),
+         `GVT est. k = 4` = round(`P(hit|4 makes)`-`P(hit|4 misses)`, digits = 3), 
+         `P(hit|4 misses)` = paste(round(`P(hit|4 misses)`, digits = 3), paste("(", shots_4mi, ")", sep = "")),
+         `P(hit|3 misses)` = paste(round(`P(hit|3 misses)`, digits = 3), paste("(", shots_3mi, ")", sep = "")),
+         `FG%` = paste(round(`FG%`, digits = 3), paste("(", shots, ")", sep = "")),
+         `P(hit|3 makes)` = paste(round(`P(hit|3 makes)`, digits = 3), paste("(", shots_3ma, ")", sep = "")),
+         `P(hit|4 makes)` = paste(round(`P(hit|4 makes)`, digits = 3), paste("(", shots_4ma, ")", sep = ""))) %>%
+  select(-shots_4mi, -shots_3mi, -shots, -shots_3ma, -shots_4ma)
+
+library(xtable)
+xtable(output, digits = 3)
