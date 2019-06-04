@@ -1,3 +1,4 @@
+library(Cairo)
 source("sim_exp.R")
 
 ## Graph with changing p

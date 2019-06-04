@@ -1,4 +1,4 @@
-rm(list = ls())
+library(Cairo)
 source("calc_exp.R")
 
 ## Graph with changing p
@@ -63,38 +63,50 @@ even <- function(x){
 } 
 even(1:10)
 
-max_N = 20
-x <- 1:max_N
+max_N <- 70
+x <- 61:max_N
 x <- x[c(FALSE, TRUE)]
 y_11 = rep(NA,length(x))
 y_21 = rep(NA,length(x))
 y_31 = rep(NA,length(x))
 y_41 = rep(NA,length(x))
 y_51 = rep(NA,length(x))
-
+#y_61 <- rep(NA, length(x))
+#y_71 <- rep(NA, length(x))
+#y_81 <- rep(NA, length(x))
 
 for (n in 1:(length(x))) {
-  y_11[n] = exp_diff(N = x[n],k = 1, p = 0.5)
-  y_21[n] = exp_diff(N = x[n],k = 2, p = 0.5)
-  y_31[n] = exp_diff(N = x[n],k = 3, p = 0.5)
-  y_41[n] = exp_diff(N = x[n], k = 3, p = 0.25)
-  y_51[n] = exp_diff(N = x[n], k = 3, p = 0.6)
+  y_11[n] <- exp_diff(N = x[n],k = 1, p = 0.5)
+  y_21[n] <- exp_diff(N = x[n],k = 2, p = 0.5)
+  y_31[n] <- exp_diff(N = x[n],k = 3, p = 0.5)
+  y_41[n] <- exp_diff(N = x[n], k = 3, p = 0.25)
+  y_51[n] <- exp_diff(N = x[n], k = 3, p = 0.6)
 }
 
+
+
+#for(n in 1:(length(x))){
+#  y_61[n] <- exp_prop(N = x[n], k = 1, p = 0.5) - exp_prop2(N = x[n], k = 1, p = 0.5)
+#  y_71[n] <- exp_prop(N = x[n], k = 3, p = 0.5) - exp_prop2(N = x[n], k = 3, p = 0.5)
+#  y_81[n] <- exp_prop(N = x[n], k = 3, p = 0.6) - exp_prop2(N = x[n], k = 3, p = 0.6)
+#}
+
+
+setwd("C:/Users/nscha/OneDrive/Studium/Bachelorarbeit VWL/Hot-Hand/Data")
 load("diff.Rdata")
 
-y_1 <- c(y_1, y_11)
-y_2 <- c(y_2, y_21)
-y_3 <- c(y_3, y_31)
-y_4 <- c(y_4, y_41)
-y_5 <- c(y_5, y_51)
+y_1 <- c(df$diff_1_0.5, y_11)
+y_2 <- c(df$diff_2_0.5, y_21)
+y_3 <- c(df$diff_3_0.5, y_31)
+y_4 <- c(df$diff_3_0.25, y_41)
+y_5 <- c(df$diff_3_0.6, y_51)
 
 #for safety reason different name
 df1 <- data.frame(diff_1_0.5 = y_1, diff_2_0.5 = y_2, diff_3_0.5 = y_3, diff_3_0.25 = y_4, diff_3_0.6 = y_5)
 save(df, file = "diff.Rdata")
 
 x1 <- 1:20 
-x2 <- c(21:60)[c(FALSE, TRUE)]
+x2 <- c(21:70)[c(FALSE, TRUE)]
 x <- c(x1, x2)
 ## Plot and save picture
 png(filename="diff_prop_k.png", 
@@ -104,10 +116,10 @@ png(filename="diff_prop_k.png",
     height=5, 
     pointsize=12, 
     res=250)
-plot(x,y_1,type="l",xlab="n",ylab="Expected difference",col="red",ylim=c(-0.5,0))
-lines(x,y_2,col="blue")
-lines(x,y_3,col="dark green")
-lines(x, y_4, col = "yellow")
-lines(x, y_5, col = "purple", lty = 2)
+plot(x,df$diff_1_0.5,type="l",xlab="n",ylab="Expected difference",col="red",ylim=c(-0.5,0))
+lines(x,df$diff_2_0.5,col="blue")
+lines(x,df$diff_3_0.5,col="dark green")
+lines(x,df$diff_3_0.25, col = "yellow")
+lines(x, df$diff_3_0.6, col = "purple", lty = 2)
 #legend(max_N*.811,.365,c("k=1","k=2","k=3"),lwd=c(1,1),col=c("red","blue","dark green", "yellow", ""))
 dev.off()
