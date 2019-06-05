@@ -63,9 +63,9 @@ even <- function(x){
 } 
 even(1:10)
 
-max_N <- 70
-x <- 61:max_N
-x <- x[c(FALSE, TRUE)]
+max_N <- 98
+x <- 87:max_N
+x <- x[c(FALSE, FALSE, FALSE, TRUE)]
 y_11 = rep(NA,length(x))
 y_21 = rep(NA,length(x))
 y_31 = rep(NA,length(x))
@@ -102,12 +102,13 @@ y_4 <- c(df$diff_3_0.25, y_41)
 y_5 <- c(df$diff_3_0.6, y_51)
 
 #for safety reason different name
-df1 <- data.frame(diff_1_0.5 = y_1, diff_2_0.5 = y_2, diff_3_0.5 = y_3, diff_3_0.25 = y_4, diff_3_0.6 = y_5)
+df <- data.frame(diff_1_0.5 = y_1, diff_2_0.5 = y_2, diff_3_0.5 = y_3, diff_3_0.25 = y_4, diff_3_0.6 = y_5)
 save(df, file = "diff.Rdata")
 
 x1 <- 1:20 
-x2 <- c(21:70)[c(FALSE, TRUE)]
-x <- c(x1, x2)
+x2 <- c(21:86)[c(FALSE, TRUE)]
+x3 <- c(87:98)[c(FALSE, FALSE, FALSE, TRUE)]
+x <- c(x1, x2, x3)
 ## Plot and save picture
 png(filename="diff_prop_k.png", 
     type="cairo",
@@ -123,3 +124,4 @@ lines(x,df$diff_3_0.25, col = "yellow")
 lines(x, df$diff_3_0.6, col = "purple", lty = 2)
 #legend(max_N*.811,.365,c("k=1","k=2","k=3"),lwd=c(1,1),col=c("red","blue","dark green", "yellow", ""))
 dev.off()
+

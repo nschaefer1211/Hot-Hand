@@ -150,3 +150,4 @@ output <- table_final %>%
 
 library(xtable)
 xtable(output, digits = 3)
+t.test()
