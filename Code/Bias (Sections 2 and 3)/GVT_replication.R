@@ -103,21 +103,21 @@ for (j in 1:length(shooters)) {
 
 
 GVT_final <- GVT_table %>%
-  mutate(`FG%` = FGM/shots, `P(hit|3 makes)` = FGM_3ma/shots_3ma, `P(hit|3 misses)` = FGM_3mi/shots_3mi, `P(hit|4 makes)` = FGM_4ma/shots_4ma,
+  mutate(`P(hit)` = FGM/shots, `P(hit|3 makes)` = FGM_3ma/shots_3ma, `P(hit|3 misses)` = FGM_3mi/shots_3mi, `P(hit|4 makes)` = FGM_4ma/shots_4ma,
          `P(hit|4 misses)` = FGM_4mi/shots_4mi) %>%
-  select(shooter, shots, `FG%`, shots_3ma, `P(hit|3 makes)`, shots_3mi, `P(hit|3 misses)`,
+  select(shooter, shots, `P(hit)`, shots_3ma, `P(hit|3 makes)`, shots_3mi, `P(hit|3 misses)`,
          shots_4ma, `P(hit|4 makes)`, shots_4mi, `P(hit|4 misses)`)
 
 GVT_output <- GVT_final %>%
-  select(shooter,`P(hit|4 misses)`, shots_4mi, `P(hit|3 misses)`, shots_3mi, `FG%`, shots, `P(hit|3 makes)`, shots_3ma, `P(hit|4 makes)`, shots_4ma) %>%
-  mutate(`GVT est. k = 3` = round(`P(hit|3 makes)`-`P(hit|3 misses)`, digits = 3),
-         `GVT est. k = 4` = round(`P(hit|4 makes)`-`P(hit|4 misses)`, digits = 3), 
-         `P(hit|4 misses)` = paste(round(`P(hit|4 misses)`, digits = 3), paste("(", shots_4mi, ")", sep = "")),
-         `P(hit|3 misses)` = paste(round(`P(hit|3 misses)`, digits = 3), paste("(", shots_3mi, ")", sep = "")),
-         `FG%` = paste(round(`FG%`, digits = 3), paste("(", shots, ")", sep = "")),
-         `P(hit|3 makes)` = paste(round(`P(hit|3 makes)`, digits = 3), paste("(", shots_3ma, ")", sep = "")),
-         `P(hit|4 makes)` = paste(round(`P(hit|4 makes)`, digits = 3), paste("(", shots_4ma, ")", sep = ""))) %>%
-  select(-shots_4mi, -shots_3mi, -shots, -shots_3ma, -shots_4ma)
+  select(shooter,`P(hit|4 misses)`, shots_4mi, `P(hit|3 misses)`, shots_3mi, `P(hit)`, shots, `P(hit|3 makes)`, shots_3ma, `P(hit|4 makes)`, shots_4ma) %>%
+  mutate(`GVT est. k = 3` = round(`P(hit|3 makes)`-`P(hit|3 misses)`, digits = 7),
+         #`GVT est. k = 4` = round(`P(hit|4 makes)`-`P(hit|4 misses)`, digits = 7), 
+         #`P(hit|4 misses)` = paste(round(`P(hit|4 misses)`, digits = 7), paste("(", shots_4mi, ")", sep = "")),
+         `P(hit|3 misses)` = paste(round(`P(hit|3 misses)`, digits = 7), paste("(", shots_3mi, ")", sep = "")),
+         `P(hit)` = paste(round(`P(hit)`, digits = 7), paste("(", shots, ")", sep = "")),
+         `P(hit|3 makes)` = paste(round(`P(hit|3 makes)`, digits = 7), paste("(", shots_3ma, ")", sep = ""))) %>%#,
+         #`P(hit|4 makes)` = paste(round(`P(hit|4 makes)`, digits = 7), paste("(", shots_4ma, ")", sep = ""))) %>%
+  select(-shots_4mi, -shots_3mi, -shots, -shots_3ma, -shots_4ma, -`P(hit|4 misses)`, -`P(hit|4 makes)`)
 
-library(xtable)
-xtable(GVT_output, digits = 3)
+#library(xtable)
+#xtable(GVT_output, digits = 7)
