@@ -4,7 +4,7 @@ source("GVT_replication.R")
 ttest2 <- GVT_output %>%
   mutate(se2 = rep(NA, dim(GVT_output)[1]))
 
-for(i in 1:(length(GVT_output$shooter)-1)){
+for(i in 1:(length(GVT_output$shooter))){
   #
   makes_after_three_makes <- GVT_table$FGM_2ma[i]
   misses_after_three_makes <- GVT_table$shots_2ma[i] - makes_after_three_makes

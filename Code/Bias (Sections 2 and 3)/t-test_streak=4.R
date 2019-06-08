@@ -1,10 +1,10 @@
 setwd("C:/Users/nscha/OneDrive/Studium/Bachelorarbeit VWL/Hot-Hand/Code/Bias (Sections 2 and 3)")
 source("GVT_replication.R")
 
-ttest4 <- GVT_output[-c(2, 26)] %>%
+ttest4 <- GVT_output %>%
   mutate(se4 = rep(NA, dim(GVT_output)[1]))
 
-for(i in 1:(length(GVT_output$shooter)-1)){
+for(i in 1:(length(GVT_output$shooter))){
   #
   makes_after_three_makes <- GVT_table$FGM_4ma[i]
   misses_after_three_makes <- GVT_table$shots_4ma[i] - makes_after_three_makes

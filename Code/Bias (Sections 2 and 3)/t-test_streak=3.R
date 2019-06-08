@@ -1,18 +1,21 @@
 setwd("C:/Users/nscha/OneDrive/Studium/Bachelorarbeit VWL/Hot-Hand/Code/Bias (Sections 2 and 3)")
 source("GVT_replication.R")
 
-ttest3 <- GVT_output[-26] %>%
+ttest3 <- GVT_output %>%
   mutate(se3 = rep(NA, dim(GVT_output)[1]))
-
-for(i in 1:(length(GVT_output$shooter)-1)){
+s1 <- c()
+s2 <- c()
+for(i in 1:(length(GVT_output$shooter))){
   #
   makes_after_three_makes <- GVT_table$FGM_3ma[i]
   misses_after_three_makes <- GVT_table$shots_3ma[i] - makes_after_three_makes
   sequence1 <- c(rep(1, makes_after_three_makes), rep(0, misses_after_three_makes))
+  s1 <- c(s1, sequence1)
   #
   makes_after_three_misses <- GVT_table$FGM_3mi[i]
   misses_after_three_misses <- GVT_table$shots_3mi[i] - makes_after_three_misses
   sequence2 <- c(rep(1, makes_after_three_misses), rep(0, misses_after_three_misses))
+  s2 <- c(s2, sequence2)
   #calculate pooled variance
   var1 <- var(sequence1)
   var2 <- var(sequence2)
@@ -33,4 +36,3 @@ ttest3$CI_lower_bound <- ttest3$adj_diff - qt(1-0.05/2,GVT_table$shots_3ma + GVT
 ttest3$CI_upper_bound <- ttest3$adj_diff + qt(1-0.05/2,GVT_table$shots_3ma + GVT_table$shots_3mi - 2)*ttest3$se3
 ttest3$se_lower <- ttest3$adj_diff - ttest3$se3
 ttest3$se_upper <- ttest3$adj_diff + ttest3$se3
-
