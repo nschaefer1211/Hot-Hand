@@ -1,82 +1,100 @@
 library(Cairo)
 source("calc_exp.R")
 
-## Graph with changing p
-max_N = 50
-x = 1:max_N
-y.5 = rep(NA,length(x))
-y.25 = rep(NA,length(x))
-y.75 = rep(NA,length(x))
-
-for (n in 1:(length(x))) {
-  y.5[n] = exp_prop(N = x[n],k = 1, p = 0.5)
-  y.25[n] = exp_prop(N = x[n],k = 1, p = 0.25)
-  y.75[n] = exp_prop(N = x[n],k = 1, p = 0.75)
-}
+########################################################################################################
+################ Graph with changing streak length k = 1, 2, 3, 4 and p = 0.3, 0.5, and 0.7 ############
+########################################################################################################
+# load data generated in data.generator.R
+load("exp_success_prop.Rdata") # make sure to have the correct working directory
 
 ## Plot and save picture
-png(filename="head_prop_p.png", 
+x <- 1:100
+png(filename="success_prop.png", 
     type="cairo",
     units="in", 
     width=6, 
     height=5, 
     pointsize=12, 
     res=250)
-plot(x,y.25,type="l",xlab="n",ylab="Expected proportion of heads",col="red",ylim=c(.00,.8))
-lines(x,y.5,col="blue")
-lines(x,y.75,col="dark green")
-legend(max_N*.76,.2,c("p=0.75","p=0.50","p=0.25"),lwd=c(1,1),col=c("dark green","blue","red"))
+plot(x,exp_success$exp_1_0.5,type="l",xlab="Number of shots (n)",ylab="Expected proportion of heads",col="gray90",ylim=c(0.1,.85), lwd = 2)
+lines(x,exp_success$exp_2_0.5,col="gray60", lwd = 2)
+lines(x,exp_success$exp_3_0.5,col="gray30", lwd = 2)
+lines(x,exp_success$exp_4_0.5,col="gray0", lwd = 2)
+lines(x,exp_success$exp_1_0.7,col="gray90", lwd = 2)
+lines(x,exp_success$exp_2_0.7,col="gray60", lwd = 2)
+lines(x,exp_success$exp_3_0.7,col="gray30", lwd = 2)
+lines(x,exp_success$exp_4_0.7,col="gray0", lwd = 2)
+lines(x,exp_success$exp_1_0.3,col="gray90", lwd = 2)
+lines(x,exp_success$exp_2_0.3,col="gray60", lwd = 2)
+lines(x,exp_success$exp_3_0.3,col="gray30", lwd = 2)
+lines(x,exp_success$exp_4_0.3,col="gray0", lwd = 2)
+lines(x, rep(0.7,100), lty = "dashed", col = "black", lwd = 2)
+lines(x, rep(0.5,100), lty = "dashed", col = "black", lwd = 2)
+lines(x, rep(0.3,100), lty = "dashed", col = "black", lwd = 2)
+text(50, .61, "p = .7")
+text(50, .445, "p = .5")
+text(50, .26, "p = .3")
+legend(21, .83,legend = c("k = 1","k = 2","k = 3", "k = 4"), col=c("gray90","gray60","gray30", "gray0"),
+       lwd = c(2, 2, 2, 2), lty = c(1, 1, 1, 1), cex = 0.8, horiz = TRUE)
 dev.off()
 
-## Graph with changing streak length k
-max_N = 100
-x = 1:max_N
-y_1 = rep(NA,length(x))
-y_2 = rep(NA,length(x))
-y_3 = rep(NA,length(x))
+######################################################################
+############## Graph to show the symmetry ############################
+######################################################################
+# load data generated in data_generator.R
+load("symmetry.Rdata") #make sure to have the correct working directory
 
-for (n in 1:(length(x))) {
-  y_1[n] = exp_prop(N = x[n],k = 1, p = 0.5)
-  y_2[n] = exp_prop(N = x[n],k = 2, p = 0.5)
-  y_3[n] = exp_prop(N = x[n],k = 3, p = 0.5)
-}
-
+x <- 1:100
 ## Plot and save picture
-png(filename="head_prop_k.png", 
+png(filename="success_prop_comp.png", 
     type="cairo",
     units="in", 
     width=6, 
     height=5, 
     pointsize=12, 
     res=250)
-plot(x,y_1,type="l",xlab="n",ylab="Expected proportion of heads",col="red",ylim=c(.3,.56))
-lines(x,y_2,col="blue")
-lines(x,y_3,col="dark green")
-legend(max_N*.811,.365,c("k=1","k=2","k=3"),lwd=c(1,1),col=c("red","blue","dark green"))
+plot(x,symm$exp_1_0.5,type="l",xlab="Number of shots (n)",ylab="Expected proportion of heads",col="gray90",ylim=c(.19,.7), lwd = 2)
+lines(x,symm$exp_2_0.5,col="gray60", lwd = 2)
+lines(x,symm$exp_3_0.5,col="gray30", lwd = 2)
+lines(x,symm$exp_4_0.5,col="gray0", lwd = 2)
+lines(x,symm$exp2_1_0.5,col="gray90", lwd = 2)
+lines(x,symm$exp2_2_0.5,col="gray60", lwd = 2)
+lines(x,symm$exp2_3_0.5,col="gray30", lwd = 2)
+lines(x,symm$exp2_4_0.5,col="gray0", lwd = 2)
+lines(x, rep(0.5, 100), lty = "dashed", col = "black", lwd = 2)
+legend(13,.3,c("k = 1","k = 2","k = 3", "k = 4"), col=c("gray90","gray60","gray30", "gray0"), horiz = TRUE,
+       lwd = c(2, 2, 2, 2), lty = c(1, 1, 1, 1))
 dev.off()
 
 
 
-load("diff.Rdata")
 
 
+########################################################################
+############## EXpected Difference in Proportions ######################
+########################################################################
+# load data generated in data.generator.R
+load("diff.Rdata") #make sure to have the correct working directory
+
+# To save some calculation time, between n = 20 and n = 86 I have only calculated every second shot length
+# between 87 and 98 only every third 
 x1 <- 1:20 
 x2 <- c(21:86)[c(FALSE, TRUE)]
 x3 <- c(87:98)[c(FALSE, FALSE, FALSE, TRUE)]
 x <- c(x1, x2, x3, 100)
 ## Plot and save picture
-png(filename="diff_prop_k.png", 
+png(filename="diff_prop.png", 
     type="cairo",
     units="in", 
     width=6, 
     height=5, 
     pointsize=12, 
     res=250)
-plot(x,df$diff_1_0.5,type="l",xlab="n",ylab="Expected difference",col="red",ylim=c(-0.5,0))
-lines(x,df$diff_2_0.5,col="blue")
-lines(x,df$diff_3_0.5,col="dark green")
-lines(x,df$diff_3_0.25, col = "yellow")
-lines(x, df$diff_3_0.6, col = "purple", lty = 2)
-#legend(max_N*.811,.365,c("k=1","k=2","k=3"),lwd=c(1,1),col=c("red","blue","dark green", "yellow", ""))
+plot(x,diff$diff_1_0.5,type="l",xlab="Number of shots (n)",ylab="Expected difference",col="gray47",ylim=c(-0.5,0), lwd = 2)
+lines(x,diff$diff_2_0.5,col="gray87", lwd = 2)
+lines(x,diff$diff_3_0.5,col="black", lwd = 2)
+lines(x,diff$diff_3_0.25, col = "black", lty = 3, lwd = 2)
+lines(x, diff$diff_3_0.6, col = "black", lty = 2, lwd = 2)
+legend(65,-.3, legend = c("k = 1, p = .5","k = 2, p = .5","k = 3, p = .5", "k = 3, p = .75, .25", "k = 3, p = .6"),
+       col=c("gray47","gray87","black", "black", "black"), lwd = c(2, 2, 2, 2, 2), lty = c(1, 1, 1, 3, 2), cex = 0.85)
 dev.off()
-

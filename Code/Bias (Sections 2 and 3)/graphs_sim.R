@@ -15,7 +15,7 @@ for (n in 1:(length(x))) {
 }
 
 ## Plot and save picture
-png(filename="head_prop_p.png", 
+png(filename="head_prop_p_sim.png", 
     type="cairo",
     units="in", 
     width=6, 
@@ -40,7 +40,7 @@ for (n in 1:(length(x))) {
 }
 
 ## Plot and save picture
-png(filename="head_prop_k.png", 
+png(filename="head_prop_sim.png", 
     type="cairo",
     units="in", 
     width=6, 

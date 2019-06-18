@@ -29,12 +29,12 @@ for(i in 1:(length(GVT_output$shooter))){
   ttest3$se3[i] <- sdpool * sqrt((1/n1) + (1/n2))
 }
 #import from Miller and Sanjurjo
-ttest3$bias3 <- c(
-  -.0812219, -.0990108, -.0898123, -.1059003, -.0863584, -.0848163, -.114956, -.1371056, -.0812219,
-  -.0898123, -.0863584, -.0834327, -.0916617, -.0880336, -.0798501, -.1006367, -.0916617, -.1033653,
-  -.0972603, -.0812219, -.0880336, -.0804257, -.0822288, -.0812219, -.0804257, NA
-)
-#ttest3$bias3 <- bias$bias3
+#ttest3$bias3 <- c(
+#  -.0812219, -.0990108, -.0898123, -.1059003, -.0863584, -.0848163, -.114956, -.1371056, -.0812219,
+#  -.0898123, -.0863584, -.0834327, -.0916617, -.0880336, -.0798501, -.1006367, -.0916617, -.1033653,
+#  -.0972603, -.0812219, -.0880336, -.0804257, -.0822288, -.0812219, -.0804257, NA
+#)
+ttest3$bias3 <- bias$bias3
 
 
 ttest3$adj_diff <- ttest3$`GVT est. k = 3` - ttest3$bias3
@@ -52,6 +52,13 @@ table3_thesis <- ttest3 %>%
 xtable(table3_thesis, digits = 3)
 
 
+# normality checks
+shapiro.test(ttest3$`GVT est. k = 3`)
+shapiro.test(ttest3$adj_diff)
+plot(density(na.omit(ttest3$`GVT est. k = 3`)))
+plot(density(na.omit(ttest3$adj_diff)))
+
+
 mean_adj_diff3 <- mean(ttest3$adj_diff[-26])
 ttest3_1 <- ttest3 %>% 
   na.omit()
@@ -61,4 +68,4 @@ total_var3 <- sum(ttest3_1$se3^2) #simulation: 1.357972
 #variance of the average difference across players
 avg_var3 <- 1/(25^2) * total_var3 #25 eligible player for computation, simulation: 0.002172755
 std_err3 <- sqrt(avg_var3) #simulation: 0.04661282
-t_value3 <- 1 - pnorm(mean_adj_diff3/std_err3) #simulation: 0.003658314
+p_value3 <- 1 - pnorm(mean_adj_diff3/std_err3) #simulation: 0.003658314

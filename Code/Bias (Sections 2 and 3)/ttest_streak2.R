@@ -1,6 +1,5 @@
-setwd("C:/Users/nscha/OneDrive/Studium/Bachelorarbeit VWL/Hot-Hand/Code/Bias (Sections 2 and 3)")
-source("GVT_replication.R")
 load("bias.Rdata")
+source("GVT_replication.R")
 library(xtable)
 
 ttest2 <- GVT_output %>%
@@ -52,7 +51,11 @@ table2_thesis <- ttest2 %>%
 xtable(table2_thesis, digits = 3)
 
 
-
+#normality checks
+shapiro.test(ttest2$`GVT est. k = 2`)
+shapiro.test(ttest2$adj_diff)
+plot(density(ttest2$`GVT est. k = 2`))
+plot(density(ttest2$adj_diff))
 
 mean_adj_diff2 <- mean(ttest2$adj_diff)
 
@@ -61,7 +64,7 @@ total_var2 <- sum(ttest2$se2^2) #simulation: 0.6336564
 #variance of the average difference across players
 avg_var2 <- 1/(26^2) * total_var2 #simulation: 0.0009373616
 std_err2 <- sqrt(avg_var2) #simulation: 0.03061636
-t_value2 <- 1 - pnorm(mean_adj_diff2/std_err2) #simulation: 0.03958073
+p_value2 <- 1 - pnorm(mean_adj_diff2/std_err2) #simulation: 0.03958073
 
 
 

@@ -43,23 +43,29 @@ table4_thesis <- ttest4 %>%
 #table output for latex
 xtable(table4_thesis, digits = 3)
 
+#normality checks
+shapiro.test(ttest4$`GVT est. k = 4`)
+shapiro.test(ttest4$adj_diff)
+plot(density(na.omit(ttest4$`GVT est. k = 4`)))
+plot(density(na.omit(ttest4$adj_diff)))
 
 
-mean_adj_diff4 <- mean(ttest4$adj_diff[-c(2,26)])
+
+mean_adj_diff4 <- mean(ttest4$adj_diff[-c(2,26)]) #simulation: 0.1021076
 
 ttest4_1 <- ttest4 %>% 
   na.omit()
 
 #compute the total variance
-total_var4 <- sum(ttest4_1$se4^2)
+total_var4 <- sum(ttest4_1$se4^2) #simulation: 2.085446
 #variance of the average difference across players
-avg_var4 <- 1/(21^2) * total_var4 #21 eligible players for computation
-std_err4 <- sqrt(avg_var4)
-t_value4 <- 1 - pnorm(mean_adj_diff/std_err4) #MS 2018 round mean_adj_diff to 0.102
+avg_var4 <- 1/(21^2) * total_var4 #21 eligible players for computation, simulation: 0.004728902
+std_err4 <- sqrt(avg_var4) #std error across 21 players, simulation: 0.06876701
+p_value4 <- 1 - pnorm(mean_adj_diff4/std_err4) #MS 2018 round mean_adj_diff to 0.102 #mean across 24 players, simulation: 0.06879397
 
 #look into this!
 #compute t value with the mean of those players that were actually used to compute the std error
-t_value4_alternative <- 1- pnorm(mean(ttest4_1$adj_diff)/std_err4) 
+p_value4_alternative <- 1- pnorm(mean(ttest4_1$adj_diff)/std_err4) #simulation: 0.01511654
 #this gives us a far better p-value
 
 
