@@ -54,7 +54,7 @@ for(i in 1:length(p_hit)){
 #bias with streak = 3
 b_3 <- rep(NA, length(p_hit))
 
-for(i in 1:5){
+for(i in 1:length(p_hit)){
   b_3[i] <- exp_diff(N = n[i], k = 3, p = p_hit[i])
 }
 
@@ -66,6 +66,7 @@ for(i in 1:length(p_hit)){
 }
 
 b_2 <- bias$bias2
+b_3 <- bias$bias3
 bias <- data.frame(bias2 = b_2, bias3 = b_3, bias4 = b_4)
 save(bias, file = "bias.Rdata")
 

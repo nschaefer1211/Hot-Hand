@@ -2,6 +2,7 @@ setwd("C:/Users/nscha/OneDrive/Studium/Bachelorarbeit VWL/Hot-Hand/Code/Bias (Se
 source("GVT_replication.R")
 
 ttest4 <- GVT_output %>%
+  select(shooter, `P(hit|4 makes)`, `P(hit)`, `P(hit|4 misses)`, `GVT est. k = 4`) %>%
   mutate(se4 = rep(NA, dim(GVT_output)[1]))
 
 for(i in 1:(length(GVT_output$shooter))){
@@ -33,4 +34,32 @@ ttest4$CI_lower_bound <- ttest4$adj_diff - qt(1-0.05/2,GVT_table$shots_4ma + GVT
 ttest4$CI_upper_bound <- ttest4$adj_diff + qt(1-0.05/2,GVT_table$shots_4ma + GVT_table$shots_4mi - 2)*ttest4$se4
 ttest4$se_lower <- ttest4$adj_diff - ttest4$se4
 ttest4$se_upper <- ttest4$adj_diff + ttest4$se4
+
+shooter_adj <- c(1:14, 1:12)
+table4_thesis <- ttest4 %>%
+  mutate(bias = bias4, `GVT est.` = `GVT est. k = 4`, `bias adj.` = adj_diff, shooter = shooter_adj) %>%
+  select(shooter, `P(hit|4 makes)`, `P(hit)`, `P(hit|4 misses)`, `GVT est.`, bias, `bias adj.`)
+
+#table output for latex
+xtable(table4_thesis, digits = 3)
+
+
+
+mean_adj_diff4 <- mean(ttest4$adj_diff[-c(2,26)])
+
+ttest4_1 <- ttest4 %>% 
+  na.omit()
+
+#compute the total variance
+total_var4 <- sum(ttest4_1$se4^2)
+#variance of the average difference across players
+avg_var4 <- 1/(21^2) * total_var4 #21 eligible players for computation
+std_err4 <- sqrt(avg_var4)
+t_value4 <- 1 - pnorm(mean_adj_diff/std_err4) #MS 2018 round mean_adj_diff to 0.102
+
+#look into this!
+#compute t value with the mean of those players that were actually used to compute the std error
+t_value4_alternative <- 1- pnorm(mean(ttest4_1$adj_diff)/std_err4) 
+#this gives us a far better p-value
+
 
