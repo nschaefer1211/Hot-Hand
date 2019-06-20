@@ -16,7 +16,7 @@ teams <- unique(data$team)
 
 
 table <- data.frame(
-  Team = c("all"), shots = c(length(data$result)), FGM = length((data %>% filter(result == "made"))$result),
+  Team = c("All"), shots = c(length(data$result)), FGM = length((data %>% filter(result == "made"))$result),
   shot_distance = c(mean(data$shot_distance)), shots_3ma = c(NA), FGM_3ma = c(NA), dist_3ma = c(NA),
   shots_3mi = c(NA), FGM_3mi = c(NA), dist_3mi = c(NA), shots_4ma = c(NA), FGM_4ma = c(NA), dist_4ma = c(NA),
   shots_4mi = c(NA), FGM_4mi = c(NA), dist_4mi = c(NA)
@@ -137,16 +137,25 @@ table_final <- table %>%
   select(Team, shots, `FG%`, shot_distance, shots_3ma, `P(hit|3 makes)`, dist_3ma, shots_3mi, `P(hit|3 misses)`, dist_3mi,
          shots_4ma, `P(hit|4 makes)`, dist_4ma, shots_4mi, `P(hit|4 misses)`, dist_4mi)
 
-output <- table_final %>%
+output <- table_final[-31] %>%
   select(Team,`P(hit|4 misses)`, shots_4mi, `P(hit|3 misses)`, shots_3mi, `FG%`, shots, `P(hit|3 makes)`, shots_3ma, `P(hit|4 makes)`, shots_4ma) %>%
   mutate(`GVT est. k = 3` = round(`P(hit|3 makes)`-`P(hit|3 misses)`, digits = 3),
          `GVT est. k = 4` = round(`P(hit|4 makes)`-`P(hit|4 misses)`, digits = 3), 
          `P(hit|4 misses)` = paste(round(`P(hit|4 misses)`, digits = 3), paste("(", shots_4mi, ")", sep = "")),
          `P(hit|3 misses)` = paste(round(`P(hit|3 misses)`, digits = 3), paste("(", shots_3mi, ")", sep = "")),
-         `FG%` = paste(round(`FG%`, digits = 3), paste("(", shots, ")", sep = "")),
+         `P(hit)` = paste(round(`FG%`, digits = 3), paste("(", shots, ")", sep = "")),
          `P(hit|3 makes)` = paste(round(`P(hit|3 makes)`, digits = 3), paste("(", shots_3ma, ")", sep = "")),
          `P(hit|4 makes)` = paste(round(`P(hit|4 makes)`, digits = 3), paste("(", shots_4ma, ")", sep = ""))) %>%
   select(-shots_4mi, -shots_3mi, -shots, -shots_3ma, -shots_4ma)
+
+avg <- list("Average", paste(round(mean(table_final$`P(hit|4 misses)`), digits = 3, paste("(", table_final$shots_4mi[31], ")", sep = ""))),
+            paste(round(mean(table_final$`P(hit|3 misses)`), digits = 3, paste("(", table_final$shots_3mi[31], ")", sep = ""))),
+            paste(round(mean(table_final$`FG%`), digits = 3, paste("(", table_final$shots[31], ")", sep = ""))),
+            paste(round(mean(table_final$`P(hit|3 makes)`), digits = 3, paste("(", table_final$shots_3ma[31], ")", sep = ""))),
+            paste(round(mean(table_final$`P(hit|4 makes)`), digits = 3, paste("(", table_final$shots_4ma[31], ")", sep = ""))),
+            mean(output$`GVT est. k = 3`), mean(output$`GVT est. k = 4`))
+
+output <- rbind(ouput, avg)
 
 library(xtable)
 xtable(output, digits = 3)
