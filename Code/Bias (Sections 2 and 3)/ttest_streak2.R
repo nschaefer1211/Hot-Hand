@@ -6,6 +6,9 @@ ttest2 <- GVT_output %>%
   select(shooter, `P(hit|2 makes)`, `P(hit)`, `P(hit|2 misses)`, `GVT est. k = 2`) %>%
   mutate(se2 = rep(NA, dim(GVT_output)[1]))
 
+#GVT paired t-test
+t.test(GVT_final$`P(hit|2 makes)`, GVT_final$`P(hit|2 misses)`, paired = TRUE)
+
 for(i in 1:(length(GVT_output$shooter))){
   #
   makes_after_three_makes <- GVT_table$FGM_2ma[i]
@@ -50,8 +53,13 @@ table2_thesis <- ttest2 %>%
 #table output for latex
 xtable(table2_thesis, digits = 3)
 
+#MS18 bias adjusted t-test
+t.test(ttest2$adj_diff)
+
 
 #normality checks
+shapiro.test(GVT_final$`P(hit|2 makes)`)
+shapiro.test(GVT_final$`P(hit|2 misses)`)
 shapiro.test(ttest2$`GVT est. k = 2`)
 shapiro.test(ttest2$adj_diff)
 plot(density(ttest2$`GVT est. k = 2`))
@@ -65,6 +73,27 @@ total_var2 <- sum(ttest2$se2^2) #simulation: 0.6336564
 avg_var2 <- 1/(26^2) * total_var2 #simulation: 0.0009373616
 std_err2 <- sqrt(avg_var2) #simulation: 0.03061636
 p_value2 <- 1 - pnorm(mean_adj_diff2/std_err2) #simulation: 0.03958073
+std_err2
+p_value2
+
+
+#binomial tests
+#check how many players experienced significant hot-hand shooting (t-test) alpha = 0.05
+eligible_shooters2 <- 0
+significant_hot_hand2 <- 0
+for(i in 1:26){
+  p <- pt((ttest2$adj_diff[i]/ttest2$se2[i]), df = (GVT_table$shots_2ma[i] + GVT_table$shots_2mi[i] -2), lower.tail = F)
+  if(!is.na(p)){
+    eligible_shooters2 <- eligible_shooters2 +1
+  }
+  if(p < 0.05){
+    significant_hot_hand2 <- significant_hot_hand2 + 1
+  }
+}
+eligible_shooters2
+significant_hot_hand2
+
+binom.test(significant_hot_hand2, eligible_shooters2, p = 0.05, "greater")
 
 
 

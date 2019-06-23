@@ -1,6 +1,8 @@
 # Graphs for confidence intervals and standard errors of t-tests.
 library(Cairo)
 
+x <- seq(0, 26, length.out = 100)
+
 # streak/k = 2
 source("ttest_streak2.R") #be sure to have the correct working directory
 #sorting data frame according the bias corrected difference in proportions (ascending)
@@ -62,7 +64,7 @@ png(filename="bias_corr4.png",
     height=5, 
     pointsize=12, 
     res=250)
-plot(Shooter, ttest4_sort$adj_diff[-c(2,26)] * 100, ylab = "Bias-corrected difference (percentage points)", xlim = c(0,25), ylim = c(-150, 165),
+plot(Shooter, ttest4_sort$adj_diff[-c(25,26)] * 100, ylab = "Bias-corrected difference (percentage points)", xlim = c(0,25), ylim = c(-150, 165),
      cex = 1.5, type = "p", pch = 16, col = "black")
 segments(x0 = Shooter, x1 = Shooter, y0 = ttest4_sort$adj_diff* 100 - ttest4_sort$se4 * 100,
          y1 = ttest4_sort$adj_diff * 100 + ttest4_sort$se4 * 100, lwd = 3, col = "gray60")

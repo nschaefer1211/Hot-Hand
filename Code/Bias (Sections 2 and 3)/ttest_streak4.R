@@ -5,6 +5,10 @@ ttest4 <- GVT_output %>%
   select(shooter, `P(hit|4 makes)`, `P(hit)`, `P(hit|4 misses)`, `GVT est. k = 4`) %>%
   mutate(se4 = rep(NA, dim(GVT_output)[1]))
 
+#GVT paired t-test
+t.test(GVT_final$`P(hit|4 makes)`, GVT_final$`P(hit|4 misses)`, paired = TRUE)
+
+
 for(i in 1:(length(GVT_output$shooter))){
   #
   makes_after_three_makes <- GVT_table$FGM_4ma[i]
@@ -43,7 +47,12 @@ table4_thesis <- ttest4 %>%
 #table output for latex
 xtable(table4_thesis, digits = 3)
 
+#MS18 bias adjusted t-test
+t.test(ttest4$adj_diff)
+
 #normality checks
+shapiro.test(GVT_final$`P(hit|4 makes)`)
+shapiro.test(GVT_final$`P(hit|4 misses)`)
 shapiro.test(ttest4$`GVT est. k = 4`)
 shapiro.test(ttest4$adj_diff)
 plot(density(na.omit(ttest4$`GVT est. k = 4`)))
@@ -67,5 +76,26 @@ p_value4 <- 1 - pnorm(mean_adj_diff4/std_err4) #MS 2018 round mean_adj_diff to 0
 #compute t value with the mean of those players that were actually used to compute the std error
 p_value4_alternative <- 1- pnorm(mean(ttest4_1$adj_diff)/std_err4) #simulation: 0.01511654
 #this gives us a far better p-value
+std_err4
+p_value4
+p_value4_alternative
+
+
+eligible_shooters4 <- 0
+significant_hot_hand4 <- 0
+for(i in 1:26){
+  p <- pt((ttest4$adj_diff[i]/ttest4$se4[i]), df = (GVT_table$shots_4ma[i] + GVT_table$shots_4mi[i] -2), lower.tail = F)
+  if(is.na(p)){
+    next
+  }
+  eligible_shooters4 <- eligible_shooters4 +1
+  if(p < 0.05){
+    significant_hot_hand4 <- significant_hot_hand4 + 1
+  }
+}
+eligible_shooters4
+significant_hot_hand4
+
+binom.test(significant_hot_hand4, eligible_shooters4, p = 0.05, "greater")
 
 
