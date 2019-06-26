@@ -1,4 +1,6 @@
 # Actual % over past n shots - Expected % over past n shots
+library(stargazer)
+
 
 load("modelData.Rdata")
 
@@ -19,9 +21,9 @@ for(j in 1:length(games)){
     id <- c(id, game_j_team_i$id[1:4])
     for(k in 5:dim(game_j_team_i)[1]){
       #actual pct of made shots in the past four shots
-      actual_pct <- sum(game_j_team_i$result[(k-4):(k-1)])/4
+      actual_pct <- (sum(game_j_team_i$result[(k-4):(k-1)])/4)
       #expected pct of past four shots
-      exp_pct <- sum((game_j_team_i$pred[(k-4):(k-1)]))/4
+      exp_pct <- (sum((game_j_team_i$pred[(k-4):(k-1)]))/4)
       heat <- c(heat, (actual_pct - exp_pct))
       id <- c(id, game_j_team_i$id[k])
     }
@@ -34,12 +36,26 @@ temp <- temp[order(temp$id),]
 model$heat <- temp$heat
 
 summary(lm(actual ~ heat + pred, data = na.omit(model)))
+summary(lm(actual ~ heat + team, data= na.omit(model)))
+#latex output
+stargazer(lm(actual ~ heat + pred, data = na.omit(model)), lm(actual ~ heat + team, data= na.omit(model)))
+#shot difficulty
+summary(lm(pred ~ heat, data = na.omit(model)))
+#latex output
+stargazer(lm(pred ~ heat, data = na.omit(model)))
+
+
+
+
+
+
+
 
 
 # apply the found model on all the data
 red <- data %>%
   select(-game_id, -date, -away_score, -home_score, -points, -event_type, -player) %>%
-  mutate(shot_type = as.factor(shot_type), shot_diff = as.factor(shot_diff), team = as.factor(team))
+  mutate(shot_type = as.factor(shot_type), shot_adddiff = as.factor(shot_adddiff), team = as.factor(team))
 
 OLS <- glm(result ~., family = binomial, data = red)
 shot_pred <- round(predict(fit, newdata = data, type = "response", digits = 2))

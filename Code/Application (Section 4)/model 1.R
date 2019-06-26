@@ -3,7 +3,6 @@ library(dplyr)
 #Model 1
 setwd("C:/Users/nscha/OneDrive/Studium/Bachelorarbeit VWL/Hot-Hand/Data")
 load("pbpData.Rdata")
-df <- read.csv("data_fullseason.csv")
 data <- Viewdata
 teams <- unique(data$team)
 
@@ -148,15 +147,14 @@ output <- table_final[-31] %>%
          `P(hit|4 makes)` = paste(round(`P(hit|4 makes)`, digits = 3), paste("(", shots_4ma, ")", sep = ""))) %>%
   select(-shots_4mi, -shots_3mi, -shots, -shots_3ma, -shots_4ma)
 
-avg <- list("Average", paste(round(mean(table_final$`P(hit|4 misses)`), digits = 3, paste("(", table_final$shots_4mi[31], ")", sep = ""))),
-            paste(round(mean(table_final$`P(hit|3 misses)`), digits = 3, paste("(", table_final$shots_3mi[31], ")", sep = ""))),
-            paste(round(mean(table_final$`FG%`), digits = 3, paste("(", table_final$shots[31], ")", sep = ""))),
-            paste(round(mean(table_final$`P(hit|3 makes)`), digits = 3, paste("(", table_final$shots_3ma[31], ")", sep = ""))),
-            paste(round(mean(table_final$`P(hit|4 makes)`), digits = 3, paste("(", table_final$shots_4ma[31], ")", sep = ""))),
+avg <- list("Average", paste(round(mean(table_final$`P(hit|4 misses)`), digits = 3), paste("(", table_final$shots_4mi[31], ")", sep = "")),
+            paste(round(mean(table_final$`P(hit|3 misses)`), digits = 3), paste("(", table_final$shots_3mi[31], ")", sep = "")),
+            paste(round(mean(table_final$`FG%`), digits = 3), paste("(", table_final$shots[31], ")", sep = "")),
+            paste(round(mean(table_final$`P(hit|3 makes)`), digits = 3), paste("(", table_final$shots_3ma[31], ")", sep = "")),
+            paste(round(mean(table_final$`P(hit|4 makes)`), digits = 3), paste("(", table_final$shots_4ma[31], ")", sep = "")),
             mean(output$`GVT est. k = 3`), mean(output$`GVT est. k = 4`))
 
-output <- rbind(ouput, avg)
+output <- rbind(output, avg)
 
 library(xtable)
 xtable(output, digits = 3)
-t.test()

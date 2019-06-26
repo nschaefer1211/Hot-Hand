@@ -73,53 +73,53 @@ for(i in 1:dim(Viewdata)[1]){
   }
 }
 
-Viewdata$shot_diff <- rep(NA, dim(Viewdata)[1])
+Viewdata$shot_adddiff <- rep(NA, dim(Viewdata)[1])
 
 for(i in 1:dim(Viewdata)[1]){
   if(!is.na(str_extract(Viewdata$description[i], "Turnaround Fadeaway"))){
-    Viewdata$shot_diff[i] <- "Turnaround Fadeaway"
+    Viewdata$shot_adddiff[i] <- "Turnaround Fadeaway"
   }
   else if(!is.na(str_extract(Viewdata$description[i], "Driving Floating"))){
-    Viewdata$shot_diff[i] <- "Driving Floating"
+    Viewdata$shot_adddiff[i] <- "Driving Floating"
   }
   else if(!is.na(str_extract(Viewdata$description[i], "Turnaround"))){
-    Viewdata$shot_diff[i] <- "Turnaround"
+    Viewdata$shot_adddiff[i] <- "Turnaround"
   }
   else if(!is.na(str_extract(Viewdata$description[i], "Fadeaway"))){
-    Viewdata$shot_diff[i] <- "Fadeaway"
+    Viewdata$shot_adddiff[i] <- "Fadeaway"
   }
   else if(!is.na(str_extract(Viewdata$description[i], "Driving"))){
-    Viewdata$shot_diff[i] <- "Driving"
+    Viewdata$shot_adddiff[i] <- "Driving"
   }
   else if(!is.na(str_extract(Viewdata$description[i], "Floating"))){
-    Viewdata$shot_diff[i] <- "Floating"
+    Viewdata$shot_adddiff[i] <- "Floating"
   }
   else if(!is.na(str_extract(Viewdata$description[i], "Pullup"))){
-    Viewdata$shot_diff[i] <- "Pullup"
+    Viewdata$shot_adddiff[i] <- "Pullup"
   }
   else if(!is.na(str_extract(Viewdata$description[i], "Reverse"))){
-    Viewdata$shot_diff[i] <- "Reverse"
+    Viewdata$shot_adddiff[i] <- "Reverse"
   }
   else if(!is.na(str_extract(Viewdata$description[i], "Running"))){
-    Viewdata$shot_diff[i] <- "Running"
+    Viewdata$shot_adddiff[i] <- "Running"
   }
   else if(!is.na(str_extract(Viewdata$description[i], "Step Back"))){
-    Viewdata$shot_diff[i] <- "Step Back"
+    Viewdata$shot_adddiff[i] <- "Step Back"
   }
   else if(!is.na(str_extract(Viewdata$description[i], "Putback"))){
-    Viewdata$shot_diff[i] <- "Putback"
+    Viewdata$shot_adddiff[i] <- "Putback"
   }
   else if(!is.na(str_extract(Viewdata$description[i], "Tip"))){
-    Viewdata$shot_diff[i] <- "Tip"
+    Viewdata$shot_adddiff[i] <- "Tip"
   }
   else if(!is.na(str_extract(Viewdata$description[i], "Cutting"))){
-    Viewdata$shot_diff[i] <- "Cutting"
+    Viewdata$shot_adddiff[i] <- "Cutting"
   }
   else if(!is.na(str_extract(Viewdata$description[i], "Alley Oop"))){
-    Viewdata$shot_diff[i] <- "Alley Oop"
+    Viewdata$shot_adddiff[i] <- "Alley Oop"
   }
   else{
-    Viewdata$shot_diff[i] <- "Straight Up"
+    Viewdata$shot_adddiff[i] <- "Straight Up"
   }
 }
 

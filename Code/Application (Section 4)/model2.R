@@ -53,19 +53,19 @@ data$result <- ifelse(data$result == "made", 1, 0)
 #half the games serve as a training set 
 smp_size <- floor(0.5 * length(unique(data$game_id)))
 
-## set the seed to make your partition reproducible
+## set a seed to make the partition reproducible
 
 set.seed(176)
 train_ind <- sample(unique(data$game_id), size = smp_size)
 
 train <- data%>%
   filter(game_id %in% train_ind) %>%
-  select(-date, -away_score, -home_score, -points, -event_type, -player) %>%
-  mutate(shot_type = as.factor(shot_type), shot_diff = as.factor(shot_diff), team = as.factor(team))
+  select(-date, -away_score, -home_score, -points,-event_type, -player) %>%
+  mutate(shot_type = as.factor(shot_type), shot_adddiff = as.factor(shot_adddiff), team = as.factor(team))
 test <- data %>%
   filter(game_id %!in% train_ind) %>%
   select(-date, -away_score, -home_score, -points, -player) %>%
-  mutate(shot_type = as.factor(shot_type), shot_diff = as.factor(shot_diff), team = as.factor(team))
+  mutate(shot_type = as.factor(shot_type), shot_adddiff = as.factor(shot_adddiff), team = as.factor(team))
 
 #null<- glm(result ~ 1, family = binomial (link = "cloglog"), data = train)
 #full <- glm(result ~., family = binomial (link = "cloglog"), data = train)
@@ -75,7 +75,7 @@ test <- data %>%
 #both <- step(null, scope = list(upper=full), data=train, direction="both")
 
 
-fit <- glm(result ~ . -game_id, family = binomial, data = train)
+fit <- glm(result ~ . -game_id, family = "binomial", data = train)
 pred <- round(predict(fit, newdata = test, type = "response"), digits = 2)
 
 pred <- ifelse(pred <= 0, 0.01, pred)
@@ -91,8 +91,16 @@ for(i in 1:length(e_prob)){
 
 
 sum(abs(actual - e_prob))
-plot(e_prob, actual)
-lines(seq(0, 1, length.out = 200), seq(0, 1, length.out = 200), col = "red")
+png(filename="regshotprob.png", 
+    type="cairo",
+    units="in", 
+    width=6, 
+    height=5, 
+    pointsize=12, 
+    res=250)
+plot(e_prob, actual, xlab = "Predicted P hat", main = "Out of Sample Shot Difficulty Test", ylab = "Binned Make %", pch = 16)
+lines(seq(0, 1, length.out = 200), seq(0, 1, length.out = 200), col = "red", lwd = 3)
+dev.off()
 
 test$actual <- rep(NA, dim(test)[1])
 for(i in 1:dim(test)[1]){
