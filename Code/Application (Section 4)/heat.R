@@ -1,12 +1,15 @@
-# Actual % over past n shots - Expected % over past n shots
+#This file performs the regressions that test for the effect of heat on shot difficulty and the hot hand on a team level 
+#Tables 6 and 7 are created 
+
 library(stargazer)
 
 #loading data. Note that this data file is not available in this repository as the data is not available for free
 load("modelData.Rdata")
-
+# renaming data for better reproducability
 model <- test
-model$id <- 1:dim(model)[1]
+model$id <- 1:dim(model)[1] #giving each observation a unique id
 
+#Creating the Heat variable
 games <- unique(test$game_id)
 heat <- c()
 id <- c()
@@ -35,14 +38,21 @@ temp <- data.frame(id, heat)
 temp <- temp[order(temp$id),]
 model$heat <- temp$heat
 
-summary(lm(actual ~ heat + pred, data = na.omit(model)))
-summary(lm(actual ~ heat + team, data= na.omit(model)))
-#latex output
-stargazer(lm(actual ~ heat + pred, data = na.omit(model)), lm(actual ~ heat + team, data= na.omit(model)))
-#shot difficulty
+############################## Regressions #############################################
+
+#effect of heat on shot difficulty
 summary(lm(pred ~ heat, data = na.omit(model)))
 #latex output
 stargazer(lm(pred ~ heat, data = na.omit(model)))
+
+#testing for heat
+# baseline model without controlling for shot difficulty
+summary(lm(actual ~ heat + team, data= na.omit(model)))
+# model that accounts for shot difficulty
+summary(lm(actual ~ heat + pred, data = na.omit(model)))
+#latex output
+stargazer(lm(actual ~ heat + pred, data = na.omit(model)), lm(actual ~ heat + team, data= na.omit(model)))
+
 
 
 
