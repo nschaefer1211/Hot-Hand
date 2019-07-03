@@ -1,3 +1,5 @@
+# This file consists of all the algorithms that are used to exactly correct for the bias
+
 
 # Helper function 1
 update_power <- function(dict, m_prime, p_prime) {
@@ -34,6 +36,7 @@ update_plus <- function(dict1, dict2) {
 
 
 # Note that in R matrix entries start with 1 instead of 0 like in other programming languages, i.e. Python
+# joint distribution for proportion of successes after k successes
 Count_Distribution <- function(N, k, p) {
   D <- as.list(numeric((k + 1) * (N + 1)))
   dim(D) <- c(k + 1, N + 1)
@@ -68,7 +71,7 @@ exp_prop <- function(N, k, p) {
   # finding list element wich has key (0,0)
   for (i in 1:length(D_rel$keys)) {
     if (D_rel$keys[[i]][1] == 0 && D_rel$keys[[i]][2] == 0) {
-      a <- i #storing the index of the list element with key (0,0)
+      a <- i # storing the index of the list element with key (0,0)
     }
     else {
       next
@@ -76,7 +79,7 @@ exp_prop <- function(N, k, p) {
   }
   # calculating the denominator
   den <- 1 - D_rel$values[a]
-  # calculating the numerator 
+  # calculating the numerator
   num <- 0
   for (i in 1:length(D_rel$keys)) {
     # skipping counts with zero successes as the coefficient is
@@ -87,7 +90,7 @@ exp_prop <- function(N, k, p) {
     else {
       # calculating the coefficient
       coeff <- D_rel$keys[[i]][2] / (D_rel$keys[[i]][1] + D_rel$keys[[i]][2])
-      # multiplying the coefficent by the corresponding probability and 
+      # multiplying the coefficent by the corresponding probability and
       # summing up
       num <- num + (coeff * D_rel$values[[i]])
     }
@@ -102,10 +105,10 @@ exp_prop2 <- function(N, k, p) {
   return(1 - exp_prop(N, k, 1 - p))
 }
 
-# exp_prop(100, 3, 0.5) - exp_prop2(100, 3, 0.5) #-0.079
-# exp_prop(100, 3, 0.6) - exp_prop2(100, 3, 0.6) #-0.089
-# exp_prop(200, 3, 0.5) - exp_prop2(200, 3, 0.5) #-0.037
+
+
 # Note that in R matrix entries start with 1 instead of 0 like in other programming languages, i.e. Python
+# joint distribution for differences in proportions
 Count_Distribution_diff <- function(N, k, p) {
   F <- as.list(numeric((k + 1) * (k + 1) * (N + 1)))
   dim(F) <- c(k + 1, k + 1, N + 1)
@@ -146,6 +149,7 @@ Count_Distribution_diff <- function(N, k, p) {
 }
 
 
+# expected difference in proportions
 exp_diff <- function(N, k, p) {
   # find out which sample of outcomes is relevant
   F <- Count_Distribution_diff(N, k, p)
@@ -185,27 +189,3 @@ exp_diff <- function(N, k, p) {
   num <- num2 - num1
   return(num / den)
 }
-
-
-
-
-
-
-
-
-
-
-# exp_diff <- function(N,k,p){
-#  q <- 1-p
-#  D1 <- Count_Distribution(N, k, p)
-#  D2 <- Count_Distribution(N, k, q)
-#  D2_rel <- D2[[1, N+1]]
-#  for(i in 1:length(D2_rel$keys)){
-#    temp1 <- D2_rel$keys[[i]][1]
-#    temp2 <- D2_rel$keys[[i]][2]
-#    D2_rel$keys[[i]][1] <- temp2
-#    D2_rel$keys[[i]][2] <- temp1
-#  }
-
-#  return(D2_rel)
-# }

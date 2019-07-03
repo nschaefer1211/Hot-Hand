@@ -1,17 +1,11 @@
 library(dplyr)
 
 #Model 1
-setwd("C:/Users/nscha/OneDrive/Studium/Bachelorarbeit VWL/Hot-Hand/Data")
+#loading data. Note that this data file is not available in this repository as the data is not available for free
 load("pbpData.Rdata")
 data <- Viewdata
 teams <- unique(data$team)
 
-## time < 2 Sekunden weglassen unless basket was scored
-# baseline dataframe kann ohne for schleife bestimmt werden.
-# Spaltennamen: team, shots bzw. possessions, baseline, nach 3 makes, nach 3 misses, nach 2 makes, nach 2 misses, nach 4 makes,
-# nach 4 misses usw, GVT bias, bias corr. in Klammern(wie oft und die shot distance).
-# Gibt es noch andere Kontrollvariablen?
-# bias correction verstehen
 
 
 table <- data.frame(

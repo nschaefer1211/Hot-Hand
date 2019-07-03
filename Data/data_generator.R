@@ -1,5 +1,4 @@
 #This file is here to clean and generate data I use in the other code files.
-setwd("C:/Users/nscha/OneDrive/Studium/Bachelorarbeit VWL/Hot-Hand/Code/Bias (Sections 2 and 3)")
 source("calc_exp.R")
 
 #########################################################################################
@@ -40,7 +39,7 @@ for (n in 1:(length(x))) {
 exp_success <- data.frame(exp_1_0.5 = y_11, exp_2_0.5 = y_12, exp_3_0.5 = y_13, exp_4_0.5 = y_14,
                  exp_1_0.7 = y_21, exp_2_0.7 = y_22, exp_3_0.7 = y_23, exp_4_0.7 = y_24,
                  exp_1_0.3 = y_31, exp_2_0.3 = y_32, exp_3_0.3 = y_33, exp_4_0.3 = y_34)
-save(exp_success, file = "exp_success_prop.Rdata")
+save(exp_success, file = "exp_success_prop.Rdata") #see data folder
 
 #####################################################################################
 ############# Data to generate the graph symm.png in graphs_calc.R ##################
@@ -70,7 +69,7 @@ for (n in 1:(length(x))) {
 
 symm <- data.frame(exp_1_0.5 = y_11, exp_2_0.5 = y_12, exp_3_0.5 = y_13, exp_4_0.5 = y_14,
                    exp2_1_0.5 = y_21, exp2_2_0.5 = y_22, exp2_3_0.5 = y_23, exp2_4_0.5 = y_24)
-save(symm, file = "symmetry.Rdata")
+save(symm, file = "symmetry.Rdata") #see data folder
 
 
 
@@ -87,9 +86,6 @@ y_21 = rep(NA,length(x))
 y_31 = rep(NA,length(x))
 y_41 = rep(NA,length(x))
 y_51 = rep(NA,length(x))
-#y_61 <- rep(NA, length(x))
-#y_71 <- rep(NA, length(x))
-#y_81 <- rep(NA, length(x))
 
 for (n in 1:(length(x))) {
   y_11[n] <- exp_diff(N = x[n],k = 1, p = 0.5)
@@ -100,16 +96,8 @@ for (n in 1:(length(x))) {
 }
 
 
-
-#for(n in 1:(length(x))){
-#  y_61[n] <- exp_prop(N = x[n], k = 1, p = 0.5) - exp_prop2(N = x[n], k = 1, p = 0.5)
-#  y_71[n] <- exp_prop(N = x[n], k = 3, p = 0.5) - exp_prop2(N = x[n], k = 3, p = 0.5)
-#  y_81[n] <- exp_prop(N = x[n], k = 3, p = 0.6) - exp_prop2(N = x[n], k = 3, p = 0.6)
-#}
-
-
 diff <- data.frame(diff_1_0.5 = y_11, diff_2_0.5 = y_21, diff_3_0.5 = y_31, diff_3_0.25 = y_41, diff_3_0.6 = y_51)
-save(diff, file = "diff.Rdata")
+save(diff, file = "diff.Rdata") #see data folder
 
 
 #generating the bias for ttest.R
@@ -134,13 +122,10 @@ for(i in 1:length(p_hit)){
 #bias with streak = 4
 b_4 <- rep(NA, length(p_hit))
 
-for(i in 22:length(p_hit)){
+for(i in 1:length(p_hit)){
   b_4[i] <- exp_diff(N = n[i], k = 4, p = p_hit[i])
 }
 
-b_2 <- bias$bias2
-b_3 <- bias$bias3
-b_4 <- c(bias$bias4[1:21], b_4[22:26])
 bias <- data.frame(bias2 = b_2, bias3 = b_3, bias4 = b_4)
-save(bias, file = "bias.Rdata")
+save(bias, file = "bias.Rdata") #see data folder
 

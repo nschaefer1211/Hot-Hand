@@ -1,5 +1,8 @@
+# This file contains functions enables the user to simulate coin flips/random experiments with binary outcome
+# for any number of trials, any streak length, and any success probability. It is really helpful to obtain a sense of intuition
+# Note that the using the code provided in graphs_calc.R one can also plot a graph for the below functions.
 
-#function to get expected heads after k successive heads in a sequence of n tosses and success probability p 
+# function to get expected heads after k successive heads in a sequence of n tosses and success probability p
 expected_heads_after_heads <- function(n, k = 3, p = 0.5, simtosses = 1e4) {
   results <- rep(NA, simtosses) # initializing result vector with as many entries as simulations
   for (sim in 1:simtosses) {
@@ -25,7 +28,7 @@ expected_heads_after_heads <- function(n, k = 3, p = 0.5, simtosses = 1e4) {
 }
 
 
-#function to get expected heads after k successive tails in a sequence of n tosses and success probability p 
+# function to get expected heads after k successive tails in a sequence of n tosses and success probability p
 # the procedure is the same as in the function get_expected_heads. Therefore, comments are largely omitted
 expected_heads_after_tails <- function(n, k = 3, p = 0.5, simtosses = 1e4) {
   results <- rep(NA, simtosses)
@@ -43,8 +46,8 @@ expected_heads_after_tails <- function(n, k = 3, p = 0.5, simtosses = 1e4) {
   return(expected_tails)
 }
 
-
-#for large enough n this gives a good approximation
-get_expected_diff <- function(n, k = 3, p = 0.5, simtosses = 1e4){
+# function that estimates the expected difference difference in proportions
+# for large enough n this gives a very good approximation, for n < 10 not so much
+get_expected_diff <- function(n, k = 3, p = 0.5, simtosses = 1e4) {
   return(expected_heads_after_heads(n, k, p, simtosses) - expected_heads_after_tails(n, k, p, simtosses))
 }

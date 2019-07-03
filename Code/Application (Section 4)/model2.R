@@ -1,5 +1,6 @@
 ##############
 
+#loading data. Note that this data file is not available in this repository as the data is not available for free
 load("pbpData.Rdata")
 "%!in%" <- function(x, y) !("%in%"(x, y))
 library(dplyr)
@@ -67,16 +68,9 @@ test <- data %>%
   select(-date, -away_score, -home_score, -points, -player) %>%
   mutate(shot_type = as.factor(shot_type), shot_adddiff = as.factor(shot_adddiff), team = as.factor(team))
 
-#null<- glm(result ~ 1, family = binomial (link = "cloglog"), data = train)
-#full <- glm(result ~., family = binomial (link = "cloglog"), data = train)
-
-#forward <-  step(null, scope=list(lower=null, upper=full), direction="forward")
-#backward <- step(full, data=train, direction="backward")
-#both <- step(null, scope = list(upper=full), data=train, direction="both")
-
 
 fit <- glm(result ~ . -game_id, family = "binomial", data = train)
-pred <- round(predict(fit, newdata = test, type = "response"), digits = 2)
+pred <- predict(fit, newdata = test, type = "response")
 
 pred <- ifelse(pred <= 0, 0.01, pred)
 pred <- ifelse(pred >= 1, 0.99, pred)
@@ -86,7 +80,7 @@ e_prob <- sort(unique(test$pred))
 for(i in 1:length(e_prob)){
   temp1 <- test %>% filter(pred == e_prob[i], result == 1)
   temp2 <- test %>% filter(pred == e_prob[i], result == 0)
-  actual[i] <- round(length(temp1$result)/(length(temp1$result) + length(temp2$result)), digits = 2)
+  actual[i] <- length(temp1$result)/(length(temp1$result) + length(temp2$result))
 }
 
 
@@ -98,7 +92,7 @@ png(filename="regshotprob.png",
     height=5, 
     pointsize=12, 
     res=250)
-plot(e_prob, actual, xlab = "Predicted P hat", main = "Out of Sample Shot Difficulty Test", ylab = "Binned Make %", pch = 16)
+plot(round(e_prob,digits = 2), round(actual, digits = 2), xlab = "Predicted P hat", main = "Out of Sample Shot Difficulty Test", ylab = "Binned Make %", pch = 16)
 lines(seq(0, 1, length.out = 200), seq(0, 1, length.out = 200), col = "red", lwd = 3)
 dev.off()
 
